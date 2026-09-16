@@ -1,4 +1,5 @@
 const { execFileSync } = require('node:child_process');
+const path = require('node:path');
 const github = require('./github');
 
 function simctl(args) {
@@ -7,6 +8,20 @@ function simctl(args) {
 
 function json(args) {
   return JSON.parse(simctl([...args, '-j']));
+}
+
+function xctestDeviceSet() {
+  return path.join(process.env.HOME || '', 'Library', 'Developer', 'XCTestDevices');
+}
+
+function listDeviceIds(deviceSet) {
+  try {
+    const args = deviceSet ? ['--set', deviceSet, 'list', 'devices', 'available'] : ['list', 'devices', 'available'];
+    const devices = json(args).devices || {};
+    return Object.values(devices).flat().map((device) => device.udid);
+  } catch {
+    return [];
+  }
 }
 
 function resolveRuntime(input, runtimes) {
@@ -33,6 +48,11 @@ function main() {
   const namePrefix = github.input('name-prefix', true);
   const reuseExisting = github.booleanInput('reuse-existing');
   if (!namePrefix) throw new Error('name-prefix must not be empty');
+
+  const deviceSet = xctestDeviceSet();
+  github.saveState('core-simulator-baseline-ids', JSON.stringify(listDeviceIds('')));
+  github.saveState('xctest-device-set', deviceSet);
+  github.saveState('xctest-baseline-ids', JSON.stringify(listDeviceIds(deviceSet)));
 
   const runtimes = json(['list', 'runtimes', 'available']).runtimes;
   const runtime = resolveRuntime(runtimeInput, runtimes);

@@ -12,6 +12,10 @@ test('creates the requested simulator and writes outputs/state', () => {
 const args = process.argv.slice(2);
 if (args.join(' ') === 'simctl list runtimes available -j') {
   console.log(JSON.stringify({ runtimes: [{ platform: 'iOS', name: 'iOS 26.5', version: '26.5', identifier: 'runtime-26-5', isAvailable: true, supportedDeviceTypes: [{ name: 'iPad mini', identifier: 'device-ipad-mini' }] }] }));
+} else if (args.join(' ') === 'simctl list devices available -j') {
+  console.log(JSON.stringify({ devices: {} }));
+} else if (args.join(' ') === 'simctl --set /tmp/ios-simulator-action-test/Library/Developer/XCTestDevices list devices available -j') {
+  console.log(JSON.stringify({ devices: {} }));
 } else if (args.join(' ') === 'simctl create Test CI iPad mini 123 device-ipad-mini runtime-26-5') {
   console.log('created-udid');
 } else {
@@ -33,6 +37,7 @@ if (args.join(' ') === 'simctl list runtimes available -j') {
       GITHUB_OUTPUT: output,
       GITHUB_STATE: state,
       GITHUB_RUN_ID: '123',
+      HOME: '/tmp/ios-simulator-action-test',
     },
     encoding: 'utf8',
   });

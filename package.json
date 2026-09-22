@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Create and clean up configurable iOS Simulators in GitHub Actions",
   "main": "dist/main.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "ncc build src/main.js -o dist/main && ncc build src/post.js -o dist/post",
     "test": "node --test"

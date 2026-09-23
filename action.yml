@@ -1,6 +1,9 @@
 name: iOS Simulator
 description: Create and automatically clean up a configurable iOS Simulator for GitHub Actions
 author: Plux Labs
+branding:
+  icon: smartphone
+  color: gray-dark
 inputs:
   device-type:
     description: Device type name or identifier, for example iPhone 16 Pro
